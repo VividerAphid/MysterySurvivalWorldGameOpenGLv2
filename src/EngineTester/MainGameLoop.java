@@ -4,6 +4,7 @@ package EngineTester;
 
 import Entities.Camera;
 import Entities.Entity;
+import Entities.Light;
 import RenderEngine.DisplayManager;
 import RenderEngine.Loader;
 import Models.RawModel;
@@ -116,6 +117,7 @@ public class MainGameLoop {
         TexturedModel staticModel = new TexturedModel(model, texture);
 
         Entity entity = new Entity(staticModel, new Vector3f(0,0,-25),0,0,0,1);
+        Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
 
         Camera camera = new Camera();
 
@@ -125,6 +127,7 @@ public class MainGameLoop {
             camera.move();
             renderer.prepare();
             shader.start();
+            shader.loadLight(light);
             shader.loadViewMatrix(camera);
             renderer.render(entity, shader);
             shader.stop();
