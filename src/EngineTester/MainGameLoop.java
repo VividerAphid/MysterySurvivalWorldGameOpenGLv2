@@ -36,17 +36,22 @@ public class MainGameLoop {
         Loader loader = new Loader();
         StaticShader shader = new StaticShader();
         
-        TexturedModel staticModel = createModel("firstTree", "huh", 10, 0);
+        
+        String[] modelNames = {"firstTree", "basicStone", "grassModel", "firstCritter"};
+        String[] modelTextures = {"huh", "genericStone", "basicGrass", "huh"};
+        
+        TexturedModel[] modelSet = createModelSet(modelNames, modelTextures);
+        System.out.println(modelSet.length);
         
         TexturedModel grassTest = createModel("grassModel", "basicGrass", 10, 0);
         grassTest.getTexture().setHasTransparency(true);
         grassTest.getTexture().setUseFakeLighting(true);
 
         
-        Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+        Light light = new Light(new Vector3f(0,0,-10), new Vector3f(1,1,1));
         
         
-        Entity[] entities = new Entity[25];
+        Entity[] entities;
         Terrain[] terrains = new Terrain[4];
         
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("genericGround"));
@@ -62,16 +67,16 @@ public class MainGameLoop {
         terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap);
         terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap);
 
-        int entityCount = 100;
+        int entityCount = 250;
         int range = 150;
-        entities = fillEntities(entityCount, range, staticModel);
-        //entities[0] = new Entity(staticModel, new Vector3f(0,0,-25),0,0,0,1);
+        entities = fillEntities(entityCount, range, modelSet);
         
         Camera camera = new Camera(new Vector3f(0, 1, range));
         camera.setSpeed(0.08f);
         
 
         entities[0] = new Entity(grassTest, new Vector3f(0,0,0), 0, 0, 0, 1);
+        entities[1] = new Entity(grassTest, new Vector3f(0,0,-20), 0, 0, 0, 1);
         
         MasterRenderer renderer = new MasterRenderer();
         while(!Display.isCloseRequested()){
@@ -80,7 +85,6 @@ public class MainGameLoop {
             camera.move();
             renderer.processEntity(entities[0]);
             for(int r = 0; r < entities.length; r++){
-                System.out.println(r);
                 renderer.processEntity(entities[r]);
             }
             for(int r = 0; r < terrains.length; r++){
@@ -94,12 +98,26 @@ public class MainGameLoop {
         DisplayManager.closeDisplay();
     }
     
-    public static Entity[] fillEntities(int count, int range, TexturedModel model){
+    public static TexturedModel[] createModelSet(String[] modelNames, String[] modelTextures){
+        TexturedModel[] modelSet = new TexturedModel[modelNames.length];
+        
+        for(int r = 0; r < modelSet.length; r++){
+            modelSet[r] = createModel(modelNames[r], modelTextures[r], 10, 0);
+            System.out.println(modelSet[r]);
+        }
+        
+        return modelSet;
+    }
+    
+    public static Entity[] fillEntities(int count, int range, TexturedModel[] modelSet){
         
         Entity[] entities = new Entity[count];
         for(int r = 0; r < count; r++){
             int x = (int)(Math.random() * (range * 2));
             int z = (int)(Math.random() * (range * 2));
+            int pick = (int)(Math.random()*3);
+            System.out.println(pick);
+            TexturedModel model = modelSet[pick];
             entities[r] = new Entity(model, new Vector3f((x - range), 0, (z - range)), 0, 0, 0, 1);
         }
         return entities;
