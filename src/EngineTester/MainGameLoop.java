@@ -33,6 +33,10 @@ public class MainGameLoop {
         StaticShader shader = new StaticShader();
         
         TexturedModel staticModel = createModel("firstTree", "huh", 10, 0);
+        
+        TexturedModel grassTest = createModel("grassModel", "basicGrass", 10, 0);
+        grassTest.getTexture().setHasTransparency(true);
+        grassTest.getTexture().setUseFakeLighting(true);
 
         
         Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
@@ -55,6 +59,8 @@ public class MainGameLoop {
         camera.setSpeed(0.08f);
         
 
+        entities[0] = new Entity(grassTest, new Vector3f(0,0,0), 0, 0, 0, 1);
+        
         MasterRenderer renderer = new MasterRenderer();
         while(!Display.isCloseRequested()){
             //entity.increasePosition(0, 0, 0);
