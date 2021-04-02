@@ -6,3 +6,9 @@ body {
 a{
 	color:#088;
 }
+a:visited{
+	color:#808;
+}
+a:hover{
+	color:#0dd;
+}
