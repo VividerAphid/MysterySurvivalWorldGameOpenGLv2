@@ -15,6 +15,8 @@ import RenderEngine.EntityRenderer;
 import Shaders.StaticShader;
 import Textures.ModelTexture;
 import java.util.HashSet;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import terrains.Terrain;
@@ -96,7 +98,9 @@ public class MainGameLoop {
     
     public static TexturedModel createModel(String modelName, String textureName, float damper, float reflectivity){
         Loader loader = new Loader();
-        RawModel raw = OBJLoader.loadObjModel(modelName, loader);
+        ModelData data = OBJFileLoader.loadOBJ(modelName);
+        RawModel raw = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+        //RawModel raw = OBJLoader.loadObjModel(modelName, loader);
         ModelTexture texture = new ModelTexture(loader.loadTexture(textureName));
         texture.setReflectivity(reflectivity);
         texture.setShineDamper(damper);
