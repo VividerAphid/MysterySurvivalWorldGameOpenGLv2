@@ -14,6 +14,8 @@ import RenderEngine.OBJLoader;
 import RenderEngine.EntityRenderer;
 import Shaders.StaticShader;
 import Textures.ModelTexture;
+import Textures.TerrainTexture;
+import Textures.TerrainTexturePack;
 import java.util.HashSet;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
@@ -47,10 +49,18 @@ public class MainGameLoop {
         Entity[] entities = new Entity[25];
         Terrain[] terrains = new Terrain[4];
         
-        terrains[0] = new Terrain(0,0, loader, new ModelTexture(loader.loadTexture("genericGround")));
-        terrains[1] = new Terrain(0,-1, loader, new ModelTexture(loader.loadTexture("genericGround")));
-        terrains[2] = new Terrain(-1,-1, loader, new ModelTexture(loader.loadTexture("genericGround")));
-        terrains[3] = new Terrain(-1,0, loader, new ModelTexture(loader.loadTexture("genericGround")));
+        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("genericGround"));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("genericSand"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("genericStone"));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("huh"));
+        
+        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapTest"));
+        
+        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap);
+        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap);
+        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap);
+        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap);
 
         int entityCount = 100;
         int range = 150;
@@ -90,7 +100,6 @@ public class MainGameLoop {
         for(int r = 0; r < count; r++){
             int x = (int)(Math.random() * (range * 2));
             int z = (int)(Math.random() * (range * 2));
-            System.out.println(x);
             entities[r] = new Entity(model, new Vector3f((x - range), 0, (z - range)), 0, 0, 0, 1);
         }
         return entities;
