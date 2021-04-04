@@ -10,13 +10,10 @@ import RenderEngine.Loader;
 import Models.RawModel;
 import Models.TexturedModel;
 import RenderEngine.MasterRenderer;
-import RenderEngine.OBJLoader;
-import RenderEngine.EntityRenderer;
 import Shaders.StaticShader;
 import Textures.ModelTexture;
 import Textures.TerrainTexture;
 import Textures.TerrainTexturePack;
-import java.util.HashSet;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
@@ -26,9 +23,6 @@ import terrains.Terrain;
 
 public class MainGameLoop {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
 
         DisplayManager.createDisplay();

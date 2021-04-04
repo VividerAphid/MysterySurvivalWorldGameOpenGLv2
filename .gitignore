@@ -1,7 +1,9 @@
-nbproject/private/
+nbproject/
 build/
 nbbuild/
 dist/
 nbdist/
+ship/
+shipPrepack/
 nbactions.xml
 nb-configuration.xml

@@ -19,16 +19,16 @@ public class Camera {
     }
 
     public void move(){
-        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_COMMA)){
             position.z -= this.speed;
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_E)){
             position.x += this.speed;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_A)){
             position.x -= this.speed;
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_S)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_O)){
             position.z += this.speed;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
