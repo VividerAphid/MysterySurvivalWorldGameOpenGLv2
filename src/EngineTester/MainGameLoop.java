@@ -7,6 +7,7 @@ import Entities.Entity;
 import Entities.Light;
 import Entities.MovableCamera;
 import Entities.Player;
+import Entities.ThirdPersonCamera;
 import RenderEngine.DisplayManager;
 import RenderEngine.Loader;
 import Models.RawModel;
@@ -64,16 +65,16 @@ public class MainGameLoop {
         int range = 150;
         entities = fillEntities(entityCount, range, modelSet);
         
-        MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
-        camera.setSpeed(0.08f);
+        //MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
+        //camera.setSpeed(0.08f);
         //StaticCamera camera = new StaticCamera(new Vector3f(0, 15, range), 20, 0, 0);
 
-        
         Player player = new Player(modelSet[3], new Vector3f(0,0,range-20), 0, 0, 0, 1);
+        ThirdPersonCamera camera = new ThirdPersonCamera(player);
         entities[0] = player;
         MasterRenderer renderer = new MasterRenderer();
         while(!Display.isCloseRequested()){
-            //player.move();
+            player.move();
             camera.move();
             renderer.processEntity(entities[0]);
             for(int r = 0; r < entities.length; r++){
