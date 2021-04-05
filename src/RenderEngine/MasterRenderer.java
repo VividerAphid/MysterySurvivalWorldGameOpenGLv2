@@ -2,7 +2,7 @@ package RenderEngine;
 
 //@author VividerAphid
 
-import Entities.Camera;
+import Entities.StaticCamera;
 import Entities.Entity;
 import Entities.Light;
 import Models.TexturedModel;
@@ -52,7 +52,7 @@ public class MasterRenderer {
     public static void disableCulling(){
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
-    public void render(Light sun, Camera camera){
+    public void render(Light sun, StaticCamera camera){
         prepare();
         shader.start();
         shader.loadSkyColour(SKY_RED, SKY_GREEN, SKY_BLUE);

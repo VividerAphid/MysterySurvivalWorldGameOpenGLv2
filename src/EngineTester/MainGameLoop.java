@@ -2,9 +2,11 @@ package EngineTester;
 
 //@author VividerAphid
 
-import Entities.Camera;
+import Entities.StaticCamera;
 import Entities.Entity;
 import Entities.Light;
+import Entities.MovableCamera;
+import Entities.Player;
 import RenderEngine.DisplayManager;
 import RenderEngine.Loader;
 import Models.RawModel;
@@ -27,22 +29,19 @@ public class MainGameLoop {
 
         DisplayManager.createDisplay();
 
-        Loader loader = new Loader();
-        StaticShader shader = new StaticShader();
-        
+        Loader loader = new Loader();        
         
         String[] modelNames = {"firstTree", "basicStone", "grassModel", "firstCritter"};
         String[] modelTextures = {"huh", "genericStone", "basicGrass", "huh"};
         
         TexturedModel[] modelSet = createModelSet(modelNames, modelTextures);
-        System.out.println(modelSet.length);
         
         TexturedModel grassTest = createModel("grassModel", "basicGrass", 10, 0);
         grassTest.getTexture().setHasTransparency(true);
         grassTest.getTexture().setUseFakeLighting(true);
 
         
-        Light light = new Light(new Vector3f(0,0,-10), new Vector3f(1,1,1));
+        Light light = new Light(new Vector3f(0,300,-10), new Vector3f(1,1,1));
         
         
         Entity[] entities;
@@ -65,17 +64,16 @@ public class MainGameLoop {
         int range = 150;
         entities = fillEntities(entityCount, range, modelSet);
         
-        Camera camera = new Camera(new Vector3f(0, 1, range));
+        MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
         camera.setSpeed(0.08f);
-        
+        //StaticCamera camera = new StaticCamera(new Vector3f(0, 15, range), 20, 0, 0);
 
-        entities[0] = new Entity(grassTest, new Vector3f(0,0,0), 0, 0, 0, 1);
-        entities[1] = new Entity(grassTest, new Vector3f(0,0,-20), 0, 0, 0, 1);
         
+        Player player = new Player(modelSet[3], new Vector3f(0,0,range-20), 0, 0, 0, 1);
+        entities[0] = player;
         MasterRenderer renderer = new MasterRenderer();
         while(!Display.isCloseRequested()){
-            //entity.increasePosition(0, 0, 0);
-            //entities[0].increaseRotation(0, 1, 0);
+            //player.move();
             camera.move();
             renderer.processEntity(entities[0]);
             for(int r = 0; r < entities.length; r++){
@@ -97,7 +95,6 @@ public class MainGameLoop {
         
         for(int r = 0; r < modelSet.length; r++){
             modelSet[r] = createModel(modelNames[r], modelTextures[r], 10, 0);
-            System.out.println(modelSet[r]);
         }
         
         return modelSet;
@@ -110,7 +107,6 @@ public class MainGameLoop {
             int x = (int)(Math.random() * (range * 2));
             int z = (int)(Math.random() * (range * 2));
             int pick = (int)(Math.random()*3);
-            System.out.println(pick);
             TexturedModel model = modelSet[pick];
             entities[r] = new Entity(model, new Vector3f((x - range), 0, (z - range)), 0, 0, 0, 1);
         }
@@ -121,7 +117,6 @@ public class MainGameLoop {
         Loader loader = new Loader();
         ModelData data = OBJFileLoader.loadOBJ(modelName);
         RawModel raw = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
-        //RawModel raw = OBJLoader.loadObjModel(modelName, loader);
         ModelTexture texture = new ModelTexture(loader.loadTexture(textureName));
         texture.setReflectivity(reflectivity);
         texture.setShineDamper(damper);
