@@ -2,6 +2,8 @@ package Shaders;
 
 //@author VividerAphid
 
+import Entities.Light;
+import Entities.StaticCamera;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -57,6 +59,20 @@ public abstract class ShaderProgram {
     }
     
     protected abstract void bindAttributes();
+    
+    public abstract void loadProjectionMatrix(Matrix4f projection);
+    
+    public abstract void loadTransformationMatrix(Matrix4f matrix);
+    
+    public abstract void loadFakeLighting(boolean useFake);
+    
+    public abstract void loadSkyColour(float r, float g, float b);
+    
+    public abstract void loadLight(Light light);
+    
+    public abstract void loadViewMatrix(StaticCamera camera);
+    
+    public abstract void loadShineVariables(float damper, float reflectivity);
     
     protected void bindAttribute(int attribute, String variableName){
         GL20.glBindAttribLocation(programID, attribute, variableName);

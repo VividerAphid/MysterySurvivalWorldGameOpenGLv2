@@ -3,8 +3,11 @@ package RenderEngine;
 //@author VividerAphid
 
 import Entities.Entity;
+import Models.HuedModel;
 import Models.RawModel;
 import Models.TexturedModel;
+import Shaders.HuedShader;
+import Shaders.ShaderProgram;
 import Shaders.StaticShader;
 import Textures.ModelTexture;
 import ToolBox.Maths;
@@ -16,13 +19,14 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 
 public class EntityRenderer {
     
-    private StaticShader shader;
+    private ShaderProgram shader;
     
-    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix){
+    public EntityRenderer(ShaderProgram shader, Matrix4f projectionMatrix){
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -54,9 +58,18 @@ public class EntityRenderer {
         }
         shader.loadFakeLighting(texture.isUseFakeLighting());
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+        if(shader.getClass() == HuedShader.class){
+            if(model.getClass() == HuedModel.class){
+            Vector3f modelHue = ((HuedModel)model).getHue();
+            ((HuedShader)shader).loadModelHue(modelHue.x, modelHue.y, modelHue.z);
+            }
+            else{
+                ((HuedShader)shader).loadModelHue(1, 1, 1);
+            }
+        }
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-    }
+    }    
     
     private void unbindTexturedModel(){
         MasterRenderer.enableCulling();

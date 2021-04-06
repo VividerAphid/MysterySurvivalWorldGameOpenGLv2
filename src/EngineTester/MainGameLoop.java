@@ -8,11 +8,13 @@ import Entities.Light;
 import Entities.MovableCamera;
 import Entities.Player;
 import Entities.ThirdPersonCamera;
+import Models.HuedModel;
 import RenderEngine.DisplayManager;
 import RenderEngine.Loader;
 import Models.RawModel;
 import Models.TexturedModel;
 import RenderEngine.MasterRenderer;
+import Shaders.HuedShader;
 import Shaders.StaticShader;
 import Textures.ModelTexture;
 import Textures.TerrainTexture;
@@ -34,13 +36,11 @@ public class MainGameLoop {
         
         String[] modelNames = {"firstTree", "basicStone", "grassModel", "firstCritter"};
         String[] modelTextures = {"huh", "genericStone", "basicGrass", "huh"};
+        String[] plainGraySet = {"plainGray", "plainGray", "basicGrass-gray", "plainGray"};
         
-        TexturedModel[] modelSet = createModelSet(modelNames, modelTextures);
+        TexturedModel[] modelSet = createTexturedModelSet(modelNames, modelTextures);
         
-        TexturedModel grassTest = createModel("grassModel", "basicGrass", 10, 0);
-        grassTest.getTexture().setHasTransparency(true);
-        grassTest.getTexture().setUseFakeLighting(true);
-
+        HuedModel[] hueTest = createHuedModelSet(modelNames, plainGraySet);
         
         Light light = new Light(new Vector3f(0,300,-10), new Vector3f(1,1,1));
         
@@ -63,7 +63,7 @@ public class MainGameLoop {
 
         int entityCount = 250;
         int range = 150;
-        entities = fillEntities(entityCount, range, modelSet);
+        entities = fillTexturedEntities(entityCount, range, hueTest);
         
         //MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
         //camera.setSpeed(0.08f);
@@ -72,7 +72,8 @@ public class MainGameLoop {
         Player player = new Player(modelSet[3], new Vector3f(0,0,range-20), 0, 0, 0, 1);
         ThirdPersonCamera camera = new ThirdPersonCamera(player);
         entities[0] = player;
-        MasterRenderer renderer = new MasterRenderer();
+        HuedShader shader = new HuedShader();
+        MasterRenderer renderer = new MasterRenderer(shader);
         while(!Display.isCloseRequested()){
             player.move();
             camera.move();
@@ -91,17 +92,27 @@ public class MainGameLoop {
         DisplayManager.closeDisplay();
     }
     
-    public static TexturedModel[] createModelSet(String[] modelNames, String[] modelTextures){
+    public static TexturedModel[] createTexturedModelSet(String[] modelNames, String[] modelTextures){
         TexturedModel[] modelSet = new TexturedModel[modelNames.length];
         
         for(int r = 0; r < modelSet.length; r++){
-            modelSet[r] = createModel(modelNames[r], modelTextures[r], 10, 0);
+            modelSet[r] = createTexturedModel(modelNames[r], modelTextures[r], 10, 0);
         }
         
         return modelSet;
     }
     
-    public static Entity[] fillEntities(int count, int range, TexturedModel[] modelSet){
+    public static HuedModel[] createHuedModelSet(String[] modelNames, String[] modelTextures){
+        HuedModel[] modelSet = new HuedModel[modelNames.length];
+        
+        for(int r = 0; r < modelSet.length; r++){
+            modelSet[r] = createHuedModel(modelNames[r], modelTextures[r], 10, 0, new Vector3f((float)Math.random(), (float)Math.random(), (float)Math.random()));
+        }
+        
+        return modelSet;
+    }
+    
+    public static Entity[] fillTexturedEntities(int count, int range, TexturedModel[] modelSet){
         
         Entity[] entities = new Entity[count];
         for(int r = 0; r < count; r++){
@@ -114,7 +125,19 @@ public class MainGameLoop {
         return entities;
     }
     
-    public static TexturedModel createModel(String modelName, String textureName, float damper, float reflectivity){
+    public static Entity[] fillHuedEntities(int count, int range, HuedModel[] modelSet){
+        Entity[] entities = new Entity[count];
+        for(int r = 0; r < count; r++){
+            int x = (int)(Math.random() * (range * 2));
+            int z = (int)(Math.random() * (range * 2));
+            int pick = (int)(Math.random()*3);
+            HuedModel model = modelSet[pick];
+            entities[r] = new Entity(model, new Vector3f((x - range), 0, (z - range)), 0, 0, 0, 1);
+        }
+        return entities;
+    }
+    
+    public static TexturedModel createTexturedModel(String modelName, String textureName, float damper, float reflectivity){
         Loader loader = new Loader();
         ModelData data = OBJFileLoader.loadOBJ(modelName);
         RawModel raw = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
@@ -122,10 +145,18 @@ public class MainGameLoop {
         texture.setReflectivity(reflectivity);
         texture.setShineDamper(damper);
         
-        return new TexturedModel(raw, texture);
+        return new TexturedModel(raw, texture);            
+    }
+    
+    public static HuedModel createHuedModel(String modelName, String textureName, float damper, float reflectivity, Vector3f hue){
+        Loader loader = new Loader();
+        ModelData data = OBJFileLoader.loadOBJ(modelName);
+        RawModel raw = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+        ModelTexture texture = new ModelTexture(loader.loadTexture(textureName));
+        texture.setReflectivity(reflectivity);
+        texture.setShineDamper(damper);
         
-        
-        
+        return new HuedModel(raw, texture, hue);      
     }
 
 }

@@ -3,12 +3,13 @@ package Models;
 //@author VividerAphid
 
 import Textures.ModelTexture;
+import org.lwjgl.util.vector.Vector3f;
 
 
 public class TexturedModel {
 
-    private RawModel rawModel;
-    private ModelTexture texture;
+    protected RawModel rawModel;
+    protected ModelTexture texture;
     
     public TexturedModel(RawModel model, ModelTexture texture){
         this.rawModel = model;

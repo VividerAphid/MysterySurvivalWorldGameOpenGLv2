@@ -40,6 +40,11 @@ public class TerrainShader extends ShaderProgram{
     }
     
     @Override
+    public void loadFakeLighting(boolean useFake){
+        
+    }
+    
+    @Override
     protected void getAllUniformLocations(){
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");

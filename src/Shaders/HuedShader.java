@@ -9,10 +9,10 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 
-public class StaticShader extends ShaderProgram{
+public class HuedShader extends ShaderProgram{
    
-    private static final String VERTEX_FILE = "src/Shaders/vertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/Shaders/fragmentShader.txt";
+    private static final String VERTEX_FILE = "src/Shaders/hueVertexShader.txt";
+    private static final String FRAGMENT_FILE = "src/Shaders/hueFragmentShader.txt";
     
     private int location_transformationMatrix;
     private int location_projectionMatrix;
@@ -23,9 +23,10 @@ public class StaticShader extends ShaderProgram{
     private int location_reflectivity;
     private int location_useFakeLighting;
     private int location_skyColour;
+    private int location_modelHue;
 
     
-    public StaticShader(){
+    public HuedShader(){
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
     
@@ -47,24 +48,26 @@ public class StaticShader extends ShaderProgram{
         location_reflectivity = super.getUniformLocation("reflectivity"); 
         location_useFakeLighting = super.getUniformLocation("useFakeLighting");
         location_skyColour = super.getUniformLocation("skyColour");
+        location_modelHue = super.getUniformLocation("modelHue");
     }
     
     public void loadSkyColour(float r, float g, float b){
         super.loadVector(location_skyColour, new Vector3f(r,g,b));
     }
     
-    @Override
+    public void loadModelHue(float r, float g, float b){
+        super.loadVector(location_modelHue, new Vector3f(r,g,b));
+    }
+    
     public void loadFakeLighting(boolean useFake){
         super.loadBoolean(location_useFakeLighting, useFake);
     }
     
-    @Override
     public void loadShineVariables(float damper, float reflectivity){
         super.loadFloat(location_shineDamper, damper);
         super.loadFloat(location_reflectivity, reflectivity);
     }
     
-    @Override
     public void loadTransformationMatrix(Matrix4f matrix){
         super.loadMatrix(location_transformationMatrix, matrix);
     }
@@ -74,7 +77,6 @@ public class StaticShader extends ShaderProgram{
         super.loadVector(location_lightColour, light.getColour());
     }
     
-    @Override
     public void loadProjectionMatrix(Matrix4f projection){
         super.loadMatrix(location_projectionMatrix, projection);
     }

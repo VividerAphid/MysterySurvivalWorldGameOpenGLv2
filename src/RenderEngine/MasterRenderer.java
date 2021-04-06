@@ -6,6 +6,7 @@ import Entities.StaticCamera;
 import Entities.Entity;
 import Entities.Light;
 import Models.TexturedModel;
+import Shaders.ShaderProgram;
 import Shaders.StaticShader;
 import Shaders.TerrainShader;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class MasterRenderer {
     private static final float SKY_GREEN = 0;
     private static final float SKY_BLUE = 0.5f;
 
-    private StaticShader shader = new StaticShader();
+    private ShaderProgram shader;
     private EntityRenderer renderer;
     
     private TerrainRenderer terrainRenderer;
@@ -38,9 +39,10 @@ public class MasterRenderer {
     private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
     private List<Terrain> terrains = new ArrayList<Terrain>();
     
-    public MasterRenderer(){
+    public MasterRenderer(ShaderProgram shader){
+        this.shader = shader;
         createProjectionMatrix();
-        renderer = new EntityRenderer(shader, projectionMatrix);
+        renderer = new EntityRenderer(this.shader, projectionMatrix);
         enableCulling();
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
     }
