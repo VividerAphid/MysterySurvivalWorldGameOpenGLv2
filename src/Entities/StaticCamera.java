@@ -8,9 +8,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class StaticCamera {
     protected Vector3f position = new Vector3f(0,0,0);
-    protected float pitch;
-    protected float yaw;
-    protected float roll;
+    protected float pitch; //x
+    protected float yaw; //y
+    protected float roll; //z
     
     public StaticCamera(){}
     public StaticCamera(Vector3f position){
