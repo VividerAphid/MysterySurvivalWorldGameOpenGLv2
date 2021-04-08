@@ -56,10 +56,10 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapTest"));
         
-        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap);
-        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap);
-        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap);
-        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap);
+        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, "heightmap");
+        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap, "heightmap");
+        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
+        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, "heightmap");
 
         int entityCount = 500;
         int range = 150;
