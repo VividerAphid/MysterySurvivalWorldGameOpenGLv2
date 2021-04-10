@@ -23,6 +23,7 @@ import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+import terrains.NoiseMaker;
 import terrains.Terrain;
 
 
@@ -56,14 +57,29 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMapTest"));
         
-        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, "heightmap");
-        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap, "heightmap");
-        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
-        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, "heightmap");
+        int width = 256;
+        int height = 256;
+        float bias = 1.2f;
+        int octaves = 8;
+        NoiseMaker noiseMaker = new NoiseMaker();
+        float[] noise = noiseMaker.basicNoise1D(width*height);
+        float[][] perlinOutput2D = noiseMaker.perlinNoise2D(width, height, noise, bias, octaves);
+        
+//        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, "heightmap");
+//        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap, "heightmap");
+//        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
+//        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, "heightmap");
+        
+        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, perlinOutput2D);
+        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap, perlinOutput2D);
+        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, perlinOutput2D);
+        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, perlinOutput2D);
+        
 
         int entityCount = 500;
         int range = 150;
         entities = fillTexturedEntities(entityCount, range, hueTest);
+        
         
         MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
         camera.setSpeed(10f);
