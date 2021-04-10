@@ -19,16 +19,15 @@ public class DisplayManager {
     private static long lastFrameTime;
     private static float delta;
     
-    private static final String DISPLAY_TITLE = "MysterySurvivalWorldGame v0.0.1-alpha";
+    private static String DISPLAY_TITLE;
     
-    public static void createDisplay(){
-        
+    public static void createDisplay(String title){
+        DISPLAY_TITLE = title;
         ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
-        
         try{
         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
         Display.create(new PixelFormat(), attribs);
-        Display.setTitle(DISPLAY_TITLE);
+        Display.setTitle(title);
         }
         catch(LWJGLException e){
             e.printStackTrace();

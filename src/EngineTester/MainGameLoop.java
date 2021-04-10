@@ -28,10 +28,11 @@ import terrains.Terrain;
 
 
 public class MainGameLoop {
-
+    public static final String VERSION = "One Small Step v0.0.1-alpha";
+    
     public static void main(String[] args) {
-
-        DisplayManager.createDisplay();
+        
+        DisplayManager.createDisplay(VERSION);
 
         Loader loader = new Loader();        
         
@@ -60,7 +61,7 @@ public class MainGameLoop {
         int width = 256;
         int height = 256;
         float bias = 1.2f;
-        int octaves = 8;
+        int octaves = 6;
         NoiseMaker noiseMaker = new NoiseMaker();
         float[] noise = noiseMaker.basicNoise1D(width*height);
         float[][] perlinOutput2D = noiseMaker.perlinNoise2D(width, height, noise, bias, octaves);
@@ -71,21 +72,18 @@ public class MainGameLoop {
 //        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, "heightmap");
         
         terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, perlinOutput2D);
-        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap, perlinOutput2D);
-        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, perlinOutput2D);
-        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, perlinOutput2D);
         
 
-        int entityCount = 500;
-        int range = 150;
+        int entityCount = 700;
+        int range = 350;
         entities = fillTexturedEntities(entityCount, range, terrains, hueTest);
         
         
-        //MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
+        //MovableCamera camera = new MovableCamera(new Vector3f(range, 1, range));
         //camera.setSpeed(10f);
         //StaticCamera camera = new StaticCamera(new Vector3f(0, 15, range), 20, 0, 0);
 
-        Player player = new Player(modelSet[3], new Vector3f(0,0,range-20), 0, 0, 0, 1);
+        Player player = new Player(modelSet[3], new Vector3f(range,0,range), 0, 0, 0, 1);
         ThirdPersonCamera camera = new ThirdPersonCamera(player);
         entities[0] = player;
         HuedShader shader = new HuedShader();
@@ -97,9 +95,8 @@ public class MainGameLoop {
             for(int r = 0; r < entities.length; r++){
                 renderer.processEntity(entities[r]);
             }
-            for(int r = 0; r < terrains.length; r++){
-                renderer.processTerrain(terrains[r]);
-            }
+                renderer.processTerrain(terrains[0]);
+
             renderer.render(light, camera);
             DisplayManager.updateDisplay();
         }
@@ -137,7 +134,7 @@ public class MainGameLoop {
             int y = (int) terrains[0].getHeightOfTerrain(x,z);
             int pick = (int)(Math.random()*3);
             TexturedModel model = modelSet[pick];
-            entities[r] = new Entity(model, new Vector3f((x - range), y, (z - range)), 0, 0, 0, 1);
+            entities[r] = new Entity(model, new Vector3f((x), y, (z)), 0, 0, 0, 1);
         }
         return entities;
     }

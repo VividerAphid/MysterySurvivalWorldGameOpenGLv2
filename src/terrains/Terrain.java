@@ -21,7 +21,9 @@ public class Terrain {
     
     private static final int VERTEX_COUNT = 120;
     
-    private static final float MAX_HEIGHT = 40;
+    private static final float MAX_HEIGHT = 50;
+    private static final float MIN_HEIGHT = -20;
+    
     private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
     
     private float[][] heights;
@@ -168,7 +170,7 @@ public class Terrain {
         return normal;
     }
     
-    private float getHeightFromNoise(int x, int z, float[][] noise){
+    private float getHeightFromNoise(int x, int z, float[][] noise, int scaleY){
         if(x < 0 || x >= noise.length  ||  z < 0 || z >=noise.length){
             return 0;
         }
@@ -176,15 +178,21 @@ public class Terrain {
         float height = color.getRGB() ;
         height += MAX_PIXEL_COLOUR / 2f;
         height /= MAX_PIXEL_COLOUR / 2f;
-        height *= MAX_HEIGHT;
+        height *= scaleY;
+        if(height > MAX_HEIGHT){
+            height = MAX_HEIGHT;
+        }
+        else if(height < MIN_HEIGHT){
+            height = MIN_HEIGHT;
+        }
         return height;
     }
     
-    private Vector3f calculateNormalFromNoise(int x, int z, float[][] noise){
-        float heightL = getHeightFromNoise(x-1, z, noise);
-        float heightR = getHeightFromNoise(x+1, z, noise);
-        float heightD = getHeightFromNoise(x, z-1, noise);
-        float heightU = getHeightFromNoise(x, z+1, noise);
+    private Vector3f calculateNormalFromNoise(int x, int z, float[][] noise, int scaleY){
+        float heightL = getHeightFromNoise(x-1, z, noise, scaleY);
+        float heightR = getHeightFromNoise(x+1, z, noise, scaleY);
+        float heightD = getHeightFromNoise(x, z-1, noise, scaleY);
+        float heightU = getHeightFromNoise(x, z+1, noise, scaleY);
         Vector3f normal = new Vector3f(heightL-heightR, 2f, heightD-heightU);
         normal.normalise();
         return normal;
@@ -194,6 +202,7 @@ public class Terrain {
         boolean withTrees = false;
         float treeChance = 0.98f;
         float treeHeight = 0;
+        int scaleY = 100;
         
         int vertexCount = noise.length ;
         //System.out.println(vertexCount);
@@ -210,11 +219,11 @@ public class Terrain {
                     for(int j=0;j<vertexCount;j++){
                             vertices[vertexPointer*3] = (float)j/((float)vertexCount - 1) * SIZE;
                             if(withTrees){if(Math.random() > treeChance){treeHeight = 10;}else{treeHeight=0;}}
-                            float height = getHeightFromNoise(j, i, noise) + treeHeight;
+                            float height = getHeightFromNoise(j, i, noise, scaleY) + treeHeight;
                             heights[j][i] = height;
                             vertices[vertexPointer*3+1] = height;
                             vertices[vertexPointer*3+2] = (float)i/((float)vertexCount - 1) * SIZE;
-                            Vector3f normal = calculateNormalFromNoise(j, i, noise);
+                            Vector3f normal = calculateNormalFromNoise(j, i, noise, scaleY);
                             normals[vertexPointer*3] = normal.x;
                             normals[vertexPointer*3+1] = normal.y;
                             normals[vertexPointer*3+2] = normal.z;
