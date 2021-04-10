@@ -78,20 +78,20 @@ public class MainGameLoop {
 
         int entityCount = 500;
         int range = 150;
-        entities = fillTexturedEntities(entityCount, range, hueTest);
+        entities = fillTexturedEntities(entityCount, range, terrains, hueTest);
         
         
-        MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
-        camera.setSpeed(10f);
+        //MovableCamera camera = new MovableCamera(new Vector3f(0, 1, range));
+        //camera.setSpeed(10f);
         //StaticCamera camera = new StaticCamera(new Vector3f(0, 15, range), 20, 0, 0);
 
-        //Player player = new Player(modelSet[3], new Vector3f(0,0,range-20), 0, 0, 0, 1);
-        //ThirdPersonCamera camera = new ThirdPersonCamera(player);
-        //entities[0] = player;
+        Player player = new Player(modelSet[3], new Vector3f(0,0,range-20), 0, 0, 0, 1);
+        ThirdPersonCamera camera = new ThirdPersonCamera(player);
+        entities[0] = player;
         HuedShader shader = new HuedShader();
         MasterRenderer renderer = new MasterRenderer(shader);
         while(!Display.isCloseRequested()){
-            //player.move();
+            player.move(terrains[0]);
             camera.move();
             renderer.processEntity(entities[0]);
             for(int r = 0; r < entities.length; r++){
@@ -128,27 +128,29 @@ public class MainGameLoop {
         return modelSet;
     }
     
-    public static Entity[] fillTexturedEntities(int count, int range, TexturedModel[] modelSet){
+    public static Entity[] fillTexturedEntities(int count, int range, Terrain[] terrains, TexturedModel[] modelSet){
         
         Entity[] entities = new Entity[count];
         for(int r = 0; r < count; r++){
             int x = (int)(Math.random() * (range * 2));
             int z = (int)(Math.random() * (range * 2));
+            int y = (int) terrains[0].getHeightOfTerrain(x,z);
             int pick = (int)(Math.random()*3);
             TexturedModel model = modelSet[pick];
-            entities[r] = new Entity(model, new Vector3f((x - range), 0, (z - range)), 0, 0, 0, 1);
+            entities[r] = new Entity(model, new Vector3f((x - range), y, (z - range)), 0, 0, 0, 1);
         }
         return entities;
     }
     
-    public static Entity[] fillHuedEntities(int count, int range, HuedModel[] modelSet){
+    public static Entity[] fillHuedEntities(int count, int range, Terrain[] terrains, HuedModel[] modelSet){
         Entity[] entities = new Entity[count];
         for(int r = 0; r < count; r++){
             int x = (int)(Math.random() * (range * 2));
             int z = (int)(Math.random() * (range * 2));
+            int y = (int) terrains[0].getHeightOfTerrain(x,z);
             int pick = (int)(Math.random()*3);
             HuedModel model = modelSet[pick];
-            entities[r] = new Entity(model, new Vector3f((x - range), 0, (z - range)), 0, 0, 0, 1);
+            entities[r] = new Entity(model, new Vector3f((x - range), y, (z - range)), 0, 0, 0, 1);
         }
         return entities;
     }
