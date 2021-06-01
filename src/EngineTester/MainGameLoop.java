@@ -61,11 +61,10 @@ public class MainGameLoop {
         int width = 256;
         int height = 256;
         float bias = 1.2f;
-        int octaves = 6;
+        int octaves = (int)(Math.random()*5)+3;
         NoiseMaker noiseMaker = new NoiseMaker();
         float[] noise = noiseMaker.basicNoise1D(width*height);
-        float[][] perlinOutput2D = noiseMaker.perlinNoise2D(width, height, noise, bias, octaves);
-        
+        float[][] perlinOutput2D = noiseMaker.perlinNoise2D(width, height, noise, bias, octaves);        
 //        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, "heightmap");
 //        terrains[1] = new Terrain(0,-1, loader, texturePack, blendMap, "heightmap");
 //        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");

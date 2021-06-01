@@ -247,6 +247,7 @@ public class Terrain {
                             indices[pointer++] = bottomRight;
                     }
             }
+            System.out.println(vertices.length);
             return loader.loadToVAO(vertices, textureCoords, normals, indices);
     }
     
