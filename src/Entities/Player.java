@@ -15,6 +15,7 @@ public class Player extends Entity{
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
     private float upwardsSpeed = 0;
+    private float sprintSpeed = 0;
     
     private boolean isInAir = false;
     
@@ -55,9 +56,9 @@ public class Player extends Entity{
     
     private void checkInputs(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_COMMA)){
-            this.currentSpeed = RUN_SPEED;
+            this.currentSpeed = (RUN_SPEED + this.sprintSpeed);
         }else if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_O)){
-            this.currentSpeed = -RUN_SPEED;
+            this.currentSpeed = - (RUN_SPEED + this.sprintSpeed);
         }
         else{
             this.currentSpeed = 0;
@@ -70,6 +71,13 @@ public class Player extends Entity{
         }
         else{
             this.currentTurnSpeed = 0;
+        }
+        
+        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+            this.sprintSpeed = 20;
+        }
+        else{
+            this.sprintSpeed = 0;
         }
         
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
