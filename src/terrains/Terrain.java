@@ -39,7 +39,7 @@ public class Terrain {
         this.texturePack = texturePack;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
-        this.model = generateAphidTerrain(loader);
+        this.model = generateFlatTerrain(loader);
     }
     
     public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap){
@@ -58,11 +58,14 @@ public class Terrain {
         this.model = generateNoiseTerrain(loader, noise);
     }
     
+    public Terrain(){}
+    
     private RawModel generateFlatTerrain(Loader loader){
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count*2];
+                heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
 		int vertexPointer = 0;
 		for(int i=0;i<VERTEX_COUNT;i++){
@@ -70,6 +73,7 @@ public class Terrain {
 				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE;
 				vertices[vertexPointer*3+1] = 0;
 				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
+                                heights[j][i] = 0;
 				normals[vertexPointer*3] = 0;
 				normals[vertexPointer*3+1] = 1;
 				normals[vertexPointer*3+2] = 0;
@@ -247,7 +251,6 @@ public class Terrain {
                             indices[pointer++] = bottomRight;
                     }
             }
-            System.out.println(vertices.length);
             return loader.loadToVAO(vertices, textureCoords, normals, indices);
     }
     

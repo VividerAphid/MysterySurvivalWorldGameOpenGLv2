@@ -14,6 +14,7 @@ public class MovableCamera extends StaticCamera{
     private float currentFBSpeed = 0;
     private float currentLRSpeed = 0;
     private float currentVerticalSpeed = 0;
+    private float sprintSpeed = 0;
     
     public MovableCamera(){super();}
     public MovableCamera(Vector3f position){
@@ -35,31 +36,38 @@ public class MovableCamera extends StaticCamera{
     }
     private void checkInputs(){
         if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_COMMA)){
-            this.currentFBSpeed = -speed;
+            this.currentFBSpeed = -(speed + sprintSpeed);
         }else if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_O)){
-            this.currentFBSpeed = speed;
+            this.currentFBSpeed = speed + sprintSpeed;
         }
         else{
             this.currentFBSpeed = 0;
         }
         
         if(Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_E)){
-            this.currentLRSpeed = speed;
+            this.currentLRSpeed = speed + sprintSpeed;
         }else if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-            this.currentLRSpeed = -speed;
+            this.currentLRSpeed = -(speed + sprintSpeed);
         }
         else{
             this.currentLRSpeed = 0;
         }
         
         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-            this.currentVerticalSpeed = speed;
+            this.currentVerticalSpeed = speed + sprintSpeed;
         }
         else if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-            this.currentVerticalSpeed = -speed;
+            this.currentVerticalSpeed = -(speed + sprintSpeed);
         }
         else{
             this.currentVerticalSpeed = 0;
+        }
+        
+        if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)){
+            this.sprintSpeed = 20f;
+        }
+        else{
+            this.sprintSpeed = 0;
         }
     }
     

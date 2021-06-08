@@ -23,6 +23,7 @@ import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+import terrains.MarchingTerrain;
 import terrains.NoiseMaker;
 import terrains.Terrain;
 
@@ -70,31 +71,35 @@ public class MainGameLoop {
 //        terrains[2] = new Terrain(-1,-1, loader, texturePack, blendMap, "heightmap");
 //        terrains[3] = new Terrain(-1,0, loader, texturePack, blendMap, "heightmap");
         
-        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, perlinOutput2D);
+        //terrains[0] = new Terrain(0,0, loader, texturePack, blendMap, perlinOutput2D);
+        terrains[0] = new Terrain(0,0, loader, texturePack, blendMap);
+        MarchingTerrain marchTester = new MarchingTerrain(0,0, loader, texturePack, blendMap, perlinOutput2D);
+        terrains[1] = marchTester;
         
 
-        int entityCount = 700;
-        int range = 350;
+        int entityCount = 1;//700;
+        int range = 5;//350;
         entities = fillTexturedEntities(entityCount, range, terrains, hueTest);
         
         
-        //MovableCamera camera = new MovableCamera(new Vector3f(range, 1, range));
-        //camera.setSpeed(10f);
+        MovableCamera camera = new MovableCamera(new Vector3f(range, 1, range));
+        camera.setSpeed(10f);
         //StaticCamera camera = new StaticCamera(new Vector3f(0, 15, range), 20, 0, 0);
 
-        Player player = new Player(modelSet[3], new Vector3f(range,0,range), 0, 0, 0, 1);
-        ThirdPersonCamera camera = new ThirdPersonCamera(player);
-        entities[0] = player;
+        //Player player = new Player(modelSet[3], new Vector3f(range,0,range), 0, 0, 0, .5f);
+        //ThirdPersonCamera camera = new ThirdPersonCamera(player);
+        //entities[0] = player;
         HuedShader shader = new HuedShader();
         MasterRenderer renderer = new MasterRenderer(shader);
         while(!Display.isCloseRequested()){
-            player.move(terrains[0]);
+            //player.move(terrains[0]);
             camera.move();
             renderer.processEntity(entities[0]);
-            for(int r = 0; r < entities.length; r++){
-                renderer.processEntity(entities[r]);
-            }
+            //for(int r = 0; r < entities.length; r++){
+                //renderer.processEntity(entities[r]);
+            //}
                 renderer.processTerrain(terrains[0]);
+                renderer.processTerrain(terrains[1]);
 
             renderer.render(light, camera);
             DisplayManager.updateDisplay();

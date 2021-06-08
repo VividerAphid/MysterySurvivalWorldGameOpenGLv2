@@ -28,6 +28,13 @@ public class Loader {
 
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices){
         int vaoID = createVAO();
+        //System.out.println("Positions");
+        //printArr(positions, vaoID);
+        //System.out.println("TextureCOords");
+        //printArr(textureCoords, vaoID);
+        //System.out.println("Normals");
+        //printArr(normals, vaoID);
+        
         bindIndicesBuffer(indices);
         storeDataInAttributeList(0, 3, positions);
         storeDataInAttributeList(1, 2, textureCoords);
@@ -105,6 +112,12 @@ public class Loader {
         }
         for(int texture:textures){
             GL11.glDeleteTextures(texture);
+        }
+    }
+    
+    private void printArr(float[] array, int vaoID){
+        for(int r = 0; r < array.length; r++){
+            System.out.println("From: " + vaoID + " " +array[r]);
         }
     }
 }
